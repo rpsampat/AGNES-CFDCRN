@@ -1,0 +1,86 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- *energy='on'* Temperature terms to 'Js' and 'Jw_add' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.Jacobian_sparse'
+- *energy='on'* Temperature terms to 'Jw' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.source_analytic'
+- *energy='on'* Temperature terms to 'Cw' and 'RatesofProduction' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.function'
+- *energy='on'* Temperature terms to 'fvect' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.Gen'
+- Diction with zones and tolerances, called 'avg_dict', (see in code comment for further details) in 'EmissionsCalculator_Batch.py'
+- Copied 'BFS_pchanged' function as 'BFS_pchanged_monaghan' with the option of adding zones and zone specific tolerances
+- Function checking the zone of graph data called 'check_zone' in 'BFS_pchanged_monaghan'
+- Included dictionary with zones and tolerances in 'EmissionCalculator_Batch'
+
+### Changed
+- *energy='on'* Model heat flux at the cantera walls using constant heat transfer coefficient 'U' instead of constant heat flux 'Q' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.py'
+- *energy='on'* Increase 'vectsize' by 1 in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.py'
+
+### Removed
+- Unused list in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.function'
+
+
+## [1.3.0] - 2019-07-01
+
+### Added
+- Added 'Turbulent Viscosity' from the standard data 'data_std' to the 'header' and 'Data' files in 'datfilepy.py'
+- *2D cases* *case specific* appended surface area of respective faces between cells to the 'facearea.pkl' in 'casefilepy.py'
+- Mass averaging function 'mass_average' that calculates the mass average of a specified value of two reactors in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.py'
+- Include turbulent diffusive mass flow rate in 'coeffmat' based on Peclet number with equal opposite size for each face between reactors in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.Gen'
+- Include 'Turbulent Viscosity' in the ParaView plots in 'SaveReactors.py'
+
+
+## [1.2.0] - 2019-06-24
+
+### Added
+- Copied 'ReactorGen_min_internalmfc_outletvalve_newton' as 'ReactorGen_min_internalmfc_outletvalve_newton_odeint' to act as CRN solver with global time integration
+- Divergence check for entering the Newton Solver, called 'globalsolver', in stead of global time integration, called 'globalsolver_odeint', in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.Gen'
+
+### Changed
+- Replace 'ode' with 'BDF' method of 'Scipy.integrate' in ReactorGen_min_internalmfc_outletvalve_newton_odeint.globalsolver_odeint'
+- Adjusted while-loop to accommodate for 'Scipy.integrate.BDF' method in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.globalsolver_odeint'
+- Account for 'rate_error' not output by 'Scipy.integrate.BDF' method in 'globalsolver_odeint' in 'ReactorGen_min_internalmfc_outletvalve_newton_odeint.Gen'
+
+
+## [1.1.0] - 2019-05-06
+
+### Added
+- *case specific* Reading and plotting functions for the experimental and CFD results of the Sandia Flame D (Read_Plot_all.py)
+- Plotting function in 'PostProc.py' called 'axial_plot0' that generates plots along a radial line at a predefined axial location.
+- *case specific* Plotting function in 'PostProc.py' called 'axial_plot' that generates comparative plots of the CRN, CFD and experimental results of the Sandia Flame D
+- Include new variables {'id_dict': [dictionary] with zone labels, ids, inlet composition and temperature, 'data_num': [integer] case specific cell id, 'symm_axis': [string] coordinate name of symmetry axis ('X-Coordinate', etc.), 'variables': [list] variables to be plotted, 'axial_locations': [list] axial locations to be plotted} in 'EmissionsCalculator_Batch.py' to centralize changes for new cases
+- 'DataFileQuantities.txt' listing the necessary Data File Quantities to be switched on in CFD to allow AGNES to function
+- *case specific* 'pmD.stat' folder with the experimental data of the Sandia Flame D
+- *case specific* 'SFD_RSM_FGM_DO_Ceps1_153_PV1_NOx_MeshV7' folder with the case relevant CFD results of the Sandia Flame D
+- Include key 'Cell Volume[m^3]' in diction using 'Cell Volume' from header in 'PostProc.Post'
+- Key 'Axial Velocity[m/s]' to diction from 'Velocity Magnitude' and 'Radial Velocity' from header in 'PostProc.Post'
+- *case specific* Key 'Cell Height[m]' to diction in 'PostProc.Post' for 'Cell Volume[m^3]' and radial location
+- Integral function in 'PostProc.py' called 'integral' that computes the surface integral of a revolved curve
+- atomic mass calculation function in 'PostProc.py' called 'mass_of' that computes the mass of a certain atom in each cell
+- Plotting function in 'PostProc.py' called 'integral_plot' that generates plots of the surface integrated average over the axial locations
+- *case specific* Plotting function in 'PostProc.py' called 'parallel_contour' that generates a contour plot parallel to the axial axis
+- *case specific* Plotting function in 'PostProc.py' called 'cross_contour' that generates radial contour plots of selected run cases as pie-sections of the same plot
+
+### Changed
+- *2D cases* Add the missing coordinate as a list of zeros in 'datfile.py' if necessary
+- *2D cases* Use 'Cell Volume' times 2pi 'Cell Volume' in 'datfilepy.py' if necessary
+- Automatically generate 'startlist' from 'id_dict' in 'CRN_Gen.py'
+- Determine starting point by checking if 'start_ratio' is included in 'id_dict' in 'BFS_pchanged.py'
+- *2D cases* Let the missing velocity direction be zero in 'BFS_pchanged.py' if necessary
+- Determine 'vel_dir' in 'BFS_pchanged.py' based on the predefined symmetry axis 'symm_axis' in stead of a default axis
+- Only proceed with generating inlet boundary cell if 'mflux' is not 0 in 'ReactorGen_min_internalmfc_outletvalve_newton.py' (related to issue of many reactors near the wall of the inlet, causing a 0 inlet mass flux)
+- Compressed boundary inlet definition and removed hard coding by using 'id_dict' in 'ReactorGen_min_internalmfc_outletvalve_newton.py'
+- Use 'symm_axis' in stead of a default axis in 'SaveReactors.py'
+
+### Removed
+- (Forgotten) commented out sections
+- Unused (valued) local variables (except checks inside try-except set ups)
+- Unused function parameters in all occurrences
+- Unused imports
+
+### Fixed
+- General PEP-8 compliance
